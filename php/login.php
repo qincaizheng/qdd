@@ -10,9 +10,9 @@
 $username=$_POST['username'];
 $password=$_POST['password'];
 if ($username=='小乔'&$password=='小乔') {
-	
+	echo "亲亲宝贝"
 }elseif ($username=='qdd'&$password=='qdd') {
-	echo "<script> window.open('./kaifa.html','_self') </script>";
+	echo "<script> window.open('../html/kaifa.html','_self') </script>";
 }else{
 
 echo "未开发";
