@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    	body{
+    		width: 100%;
+    		height: 100%;
+    	}
+    	.yulan{
+    		position: absolute;
+    		width: 45%;
+    		height: 80%;
+    		top:10%;
+    		left: 50%;
+    		border:2px solid #000;
+    	}
+    	#yulan{
+    		width: 100%;
+    		height: 100%;
+    	}
+    	#daima{
+    		vertical-align:top;
+    		resize:none;
+    	}
+    </style>
+</head>
+
+<body>
+    <form>
+        <select id="wenjian" onchange="openfra(this.value)"></select>
+        <input type="text" id="filename"><br>
+        <textarea name="daima" id="daima"  rows="50" cols="100"></textarea>
+    </form>
+    <button onclick="php(1)">查看代码</button>
+    <button onclick="php(2)">修改代码</button>
+    <button onclick="php(3)">刷新下拉框</button>
+    <button onclick="php(4)">删除文件</button>
+    <div class="yulan">
+    	<iframe frameborder="0" target="yulan" id="yulan" ></iframe>
+    </div>
+</body>
+<script>
+window.onload=function(){
+	php(3);
+}
+var xmlhttp;
+function php(a) {
+    var daima = document.getElementById("daima").value;
+    var filename = document.getElementById("filename").value;
+    var wenjian = document.getElementById("wenjian").value;
+    if (!daima) {
+        daima = null;
+    }
+    var sends = "moth=" + a + "&daima=" + daima+ "&filename=" +filename;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if (a == '3') {
+                select(xmlhttp.responseText);
+            } else {
+                document.getElementById("daima").innerHTML = xmlhttp.responseText;
+            }
+        }
+    }
+    xmlhttp.open("POST", "kaifa.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(sends);
+    if(a=='4'){
+    	location.reload();
+    }
+}
+
+function select(a) {
+    var wenjian = document.getElementById("wenjian");
+    var wenjianstr = '';
+    var arr=a.split("][");
+    for (i in arr){
+    	arr[i]=arr[i].replace(/\[|]/,'');
+    	arr[i]=arr[i].replace(/^["|'](.*)["|']$/g,'$1');
+    	if(arr[i]=="kaifa.html"){
+    		continue;
+    	}
+    	wenjianstr += "<option value='" + arr[i] + "'>" + arr[i] + "</option>";
+    }
+   
+    wenjian.innerHTML=wenjianstr
+}
+function openfra(a){
+	var filename = document.getElementById("filename");
+    filename.value=a;
+	var frame=document.getElementById("yulan");
+	var url="./"+a;
+	frame.src=url;
+}
+</script>
+
+</html>
